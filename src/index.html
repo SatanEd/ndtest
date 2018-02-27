@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Socket chat</title>
+</head>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io();
+</script>
+<body>
+  <div id="app" ></div>
+<form id="go">
+    <input id="name" autocomplete="off" type="text" name="name" placeholder="Name" />
+    <input id="m" autocomplete="off" type="text" name="message" placeholder="Message" />
+    <button>Submit</button>
+</form>
+<script>
+    const go = document.getElementById('go');
+
+    socket.on('new message', (msg) => {
+        console.log(`New message: ${msg}`);
+    });
+
+    go.onsubmit = (e) => {
+        e.preventDefault();
+        const name = document.getElementById('name');
+        const inpt = document.getElementById('m');
+        const val = inpt.value;
+        const nameVal = name.value;
+
+        socket.emit('message', JSON.stringify({
+            name: nameVal || '',
+            message: val || '',
+        }));
+        inpt.value = '';
+        return false;
+    };
+</script>
+</body>
+</html>
